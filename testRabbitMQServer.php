@@ -22,7 +22,7 @@ function requestProcessor($request)
   }
   switch ($request['type'])
   {
-    case "Login":
+    case "login":
       return doLogin($request['username'],$request['password']);
     case "validate_session":
       return doValidate($request['sessionId']);
