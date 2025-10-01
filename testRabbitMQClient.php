@@ -13,11 +13,12 @@ else
 {
   $msg = "test message";
 }
-
+$username = "steve";
+$password = "password";
 $request = array();
 $request['type'] = "login";
-$request['username'] = "steve";
-$request['password'] = "password";
+$request['username'] = $username;
+$request['password'] = $password;
 $request['message'] = $msg;
 $response = $client->send_request($request);
 //$response = $client->publish($request);
@@ -27,4 +28,4 @@ print_r($response);
 echo "\n\n";
 
 echo $argv[0]." END".PHP_EOL;
-
+?>
