@@ -23,11 +23,25 @@ function requestProcessor($request)
   switch ($request['type'])
   {
     case "login":
-      return doLogin($request['username'],$request['password']);
+     // return doLogin($request['username'],$request['password']);
+    	$session_id = uniqid("sess_", true);
+    	file_put_contents("/tmp/session_$session_id.txt", $request['username']);
+    	return array(
+        	'status' => 'success',
+        	'message' => 'Login successful',
+        	'session_id' => $session_id
+   	 );
     case "validate_session":
-      return doValidate($request['sessionId']);
+      //return doValidate($request['sessionId']);
+  	$session_id = $request['session_id'];
+    	$session_file = "/tmp/session_$session_id.txt";
+    	if (file_exists($session_file)) {
+        	$user = file_get_contents($session_file);
+        	return array('status' => 'success', 'message' => "Session valid for user $user");
+    	}
+    	return array('status' => 'fail', 'message' => 'Invalid or expired session');
   }
-  return array("returnCode" => '0', 'message'=>"Server received request and processed");
+  //return array("returnCode" => '0', 'message'=>"Server received request and processed");
 }
 
 $server = new rabbitMQServer("testRabbitMQ.ini","testServer");
