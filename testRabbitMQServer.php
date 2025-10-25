@@ -30,7 +30,8 @@ function requestProcessor($request)
         	'status' => 'success',
         	'message' => 'Login successful',
         	'session_id' => $session_id
-   	 );
+	);
+
     case "validate_session":
       //return doValidate($request['sessionId']);
   	$session_id = $request['session_id'];
@@ -39,7 +40,17 @@ function requestProcessor($request)
         	$user = file_get_contents($session_file);
         	return array('status' => 'success', 'message' => "Session valid for user $user");
     	}
-    	return array('status' => 'fail', 'message' => 'Invalid or expired session');
+	return array('status' => 'fail', 'message' => 'Invalid or expired session');
+    case "stock_data":
+            $symbol = $request['message']['symbol'] ?? 'unknown';
+            $timestamp = $request['message']['timestamp'] ?? '';
+            $log_file = "/tmp/stock_$symbol.log";
+            file_put_contents($log_file, json_encode($request['message']).PHP_EOL, FILE_APPEND);
+            return array('status' => 'success', 'message' => "Stock data received for $symbol at $timestamp");
+
+        default:
+            return "ERROR: unsupported message type";
+
   }
   //return array("returnCode" => '0', 'message'=>"Server received request and processed");
 }
